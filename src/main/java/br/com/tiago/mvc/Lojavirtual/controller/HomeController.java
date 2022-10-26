@@ -1,7 +1,10 @@
 package br.com.tiago.mvc.Lojavirtual.controller;
 
-import java.util.Arrays;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,19 +14,22 @@ import br.com.tiago.mvc.Lojavirtual.model.Pedido;
 
 @Controller
 public class HomeController {
+
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@GetMapping("/home")
 	public String home(Model model) {
 
-		Pedido pedido = new Pedido();
-
-		pedido.setNomeProduto("Notebook");
-		pedido.setDescricaoDoproduto("NOTEBOOK SAMSUNG GALAXY BOOK GO 4GB 128GB 14'' WIN 11 PRO, Prata");
-		pedido.setImgDoProduto("https://m.media-amazon.com/images/I/71e+BYPrsvL._AC_SL1500_.jpg");
-		List<Pedido> pedidos = Arrays.asList(pedido);
-
+		Query query = entityManager.createQuery("select p from Pedido p", Pedido.class);
+		List<Pedido> pedidos = query.getResultList();
+		
 		model.addAttribute("pedidos", pedidos);
-
 		return "home";
+
+		
+
+
 
 	}
 }
